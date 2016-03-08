@@ -32,7 +32,7 @@ function encrypt(){
 	var prf = new sjcl.cipher.aes(key);
 	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce);
 	var toHex = sjcl.codec.hex.fromBits;
-	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key),toHex(plainText),toHex(cipherText)].join('<br>');
+	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key),toHex(plaintext),toHex(ciphertext)].join('<br>');
 }
 </script>
 </body>
