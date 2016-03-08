@@ -23,8 +23,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.0/sjcl.min.js"></script>
 <script>
 function encrypt(){
-	var salt = sjcl.random.getRandomWords(4);
-	var nonce = sjcl.random.getRandomWords(4);
+	var salt = sjcl.random.randomWords(4);
+	var nonce = sjcl.random.randomWords(4);
 	disp.innerHTML = [salt,nonce].join('<br>');
 }
 </script>
