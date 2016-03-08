@@ -28,8 +28,11 @@ function encrypt(){
 	var nonce = rand.slice(4);
 	var iter = 1024;
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
+	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
+	var prf = new sjcl.cipher.aes(key);
+	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce);
 	var toHex = sjcl.codec.hex.fromBits;
-	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key)].join('<br>');
+	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key),toHex(plainText),toHex(cipherText)].join('<br>');
 }
 </script>
 </body>
