@@ -23,9 +23,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.0/sjcl.min.js"></script>
 <script>
 function encrypt(){
-	var salt = sjcl.random.randomWords(4);
-	var nonce = sjcl.random.randomWords(4);
-	disp.innerHTML = [salt,nonce].join('<br>');
+	var rand = sjcl.random.randomWords(8);
+	var salt = rand.slice(0,4);
+	var nonce = rand.slice(4);
+	var iter = 1024;
+	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
+	var toHex = sjcl.codec.hex.fromBits;
+	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key)].join('<br>');
 }
 </script>
 </body>
