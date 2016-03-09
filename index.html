@@ -51,7 +51,7 @@ function encrypt(){
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
 	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
 	var prf = new sjcl.cipher.aes(key);
-	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce);
+	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce, salt);
 	var toHex = sjcl.codec.hex.fromBits;
 	disp.innerHTML = '<pre>' + 
 	['salt: '+toHex(salt),
@@ -77,8 +77,9 @@ function decrypt(){
 		key = sjcl.misc.pbkdf2(pwd2.value, salt, strength * 1024);
 		try{
 			prf = new sjcl.cipher.aes(key);
-			plaintext = sjcl.mode.gcm.decrypt(prf, ciphertext, nonce);
+			plaintext = sjcl.mode.gcm.decrypt(prf, ciphertext, nonce, salt);
 		}catch(e){
+			alert('decryption failed');
 			plaintext = [];
 		}
 	}
