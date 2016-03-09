@@ -31,14 +31,17 @@ function encrypt(){
 	var rand = sjcl.random.randomWords(8);
 	var salt = rand.slice(0,4);
 	var nonce = rand.slice(4);
-	var iter = 1024;
-	var params = 128 + ((rand[0]>>>30)<<4);
+	var strenth = 1;
+	var iter = 1024 * strength;
+	var params = 128 ^ ((rand[0]>>>30)<<4) ^ (1 << 16) ^ strength;
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
 	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
 	var prf = new sjcl.cipher.aes(key);
 	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce, rand);
 	var toHex = sjcl.codec.hex.fromBits;
-	disp.innerHTML = [toHex(salt),toHex(nonce),toHex(key),toHex(plaintext),toHex(ciphertext),params].join('<br>');
+	disp.innerHTML = '<pre>' + 
+	[toHex(salt),toHex(nonce),toHex(key),toHex(plaintext),toHex(ciphertext),params].join('<br>') +
+	'</pre>';
 }
 </script>
 </body>
