@@ -33,7 +33,8 @@ function encrypt(){
 	var nonce = rand.slice(4);
 	var strength = 1;
 	var iter = 1024 * strength;
-	var params = 128 ^ ((rand[0]>>>30)<<4) ^ (1 << 16) ^ strength;
+	var protocol = 1;
+	var params = (128 ^ ((rand[0]>>>30)<<4)) << 24 ^ (protocol << 16) ^ strength;
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
 	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
 	var prf = new sjcl.cipher.aes(key);
