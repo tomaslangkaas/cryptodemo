@@ -20,6 +20,18 @@
   <button id="encBtn" onclick="encrypt()">Encrypt</button>
 </div>
 <div id="disp"></div>
+
+<div>
+  <textarea id='ciph'></textarea>
+</div>
+<div>
+	<input type="" id="pwd2" value="Password">
+</div>
+<div>
+  <button id="encBtn" onclick="decrypt()">Decrypt</button>
+</div>
+<div id="disp2"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.0/sjcl.min.js"></script>
 <script>
 /*
@@ -34,14 +46,28 @@ function encrypt(){
 	var strength = 1;
 	var iter = 1024 * strength;
 	var protocol = 1;
-	var params = (128 ^ ((rand[0]>>>30)<<4)) << 24 ^ (protocol << 16) ^ strength;
+	var params = [].concat((128 ^ ((rand[0]>>>30)<<4)) << 24 ^ (protocol << 16) ^ strength,
+	rand);
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
 	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
 	var prf = new sjcl.cipher.aes(key);
 	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce, rand);
 	var toHex = sjcl.codec.hex.fromBits;
 	disp.innerHTML = '<pre>' + 
-	[toHex(salt),toHex(nonce),toHex(key),toHex(plaintext),toHex(ciphertext),params].join('<br>') +
+	['salt: '+toHex(salt),
+	'nonce: '+toHex(nonce),
+	'key: '+toHex(key),
+	'plaintext: '+toHex(plaintext),
+	'ciphertext: '+toHex(ciphertext),
+	'params: ' + params].join('<br>') +
+	'</pre>';
+	ciph.value = toHex(params.concat(ciphertext));
+}
+function decrypt(){
+	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
+	var toHex = sjcl.codec.hex.fromBits;
+	disp2.innerHTML = '<pre>' +
+	['params: ' + params].join('<br>') +
 	'</pre>';
 }
 </script>
