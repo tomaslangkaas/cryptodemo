@@ -59,15 +59,16 @@ function encrypt(){
 	'key: '+toHex(key),
 	'plaintext: '+toHex(plaintext),
 	'ciphertext: '+toHex(ciphertext),
-	'params: ' + params].join('<br>') +
+	'params: ' + toHex(params)].join('<br>') +
 	'</pre>';
 	ciph.value = toHex(params.concat(ciphertext));
 }
 function decrypt(){
 	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
+	var params = ciphertext.slice(0,9);
 	var toHex = sjcl.codec.hex.fromBits;
 	disp2.innerHTML = '<pre>' +
-	['params: ' + params].join('<br>') +
+	['params: ' + toHex(params)].join('<br>') +
 	'</pre>';
 }
 </script>
