@@ -77,7 +77,7 @@ function decrypt(){
 		key = sjcl.misc.pbkdf2(pwd2.value, salt, strength * 1024);
 		try{
 			prf = new sjcl.cipher.aes(key);
-			plaintext = sjcl.mode.gcm.decrypt(prf, ciphertext, nonce, params.concat(salt, nonce));
+			plaintext = sjcl.mode.gcm.decrypt(prf, ciphertext, nonce, [].concat(params, salt, nonce));
 		}catch(e){}
 	}
 	var toHex = sjcl.codec.hex.fromBits;
