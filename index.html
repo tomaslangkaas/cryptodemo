@@ -67,13 +67,18 @@ function decrypt(){
 	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
 	var params = ciphertext[0];
 	var familiar = (params >>> 30) == 2 && ((params >>> 28) & 3) == ciphertext[1] >>>30;
-	var protocol, strength, salt, nonce, iter, key;
+	var protocol, strength, salt, nonce, iter, key, plaintext, prf;
 	if(familiar){
 		protocol = (params >>> 16) & 0xff;
 		strength = params & 0xffff;
 		salt = ciphertext.slice(1,5);
 		nonce = ciphertext.slice(5,9);
+		ciphertext = ciphertext.slice(9);
 		key = sjcl.misc.pbkdf2(pwd2.value, salt, strength * 1024);
+		try{
+			prf = new sjcl.cipher.aes(key);
+			plaintext = sjcl.mode.gcm.decrypt(prf, ciphertext, nonce, params.concat(salt, nonce));
+		}catch(e){}
 	}
 	var toHex = sjcl.codec.hex.fromBits;
 	disp2.innerHTML = '<pre>' +
@@ -83,7 +88,9 @@ function decrypt(){
 		'strength: '+ strength,
 		'salt: '+toHex(salt),
 		'nonce: '+toHex(nonce),
-		'key: '+toHex(key)
+		'key: '+toHex(key),
+		'ciphertext: '+toHex(ciphertext),
+		'plaintext: '+toHex(plaintext)
 	].join('<br>') +
 	'</pre>';
 }
