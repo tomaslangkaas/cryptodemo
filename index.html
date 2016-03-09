@@ -65,10 +65,14 @@ function encrypt(){
 }
 function decrypt(){
 	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
-	var params = ciphertext.slice(0,9);
+	var protocol = ciphertext[0];
+	var familiar = (protocol >>> 30) == 2 && ((protocol >>> 28) & 3) == ciphertext[1] >>>30;
 	var toHex = sjcl.codec.hex.fromBits;
 	disp2.innerHTML = '<pre>' +
-	['params: ' + toHex(params)].join('<br>') +
+	[
+		'familiar: ' + familiar,
+		'params: ' + toHex(params)
+	].join('<br>') +
 	'</pre>';
 }
 </script>
