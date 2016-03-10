@@ -73,6 +73,7 @@ function decrypt(){
 		strength = params & 0xffff;
 		salt = ciphertext.slice(1,5);
 		nonce = ciphertext.slice(5,9);
+params = ciphertext.slice(0,9);
 		ciphertext = ciphertext.slice(9);
 		key = sjcl.misc.pbkdf2(pwd2.value, salt, strength * 1024);
 		try{
@@ -92,6 +93,7 @@ function decrypt(){
 		'salt: '+toHex(salt),
 		'nonce: '+toHex(nonce),
 		'key: '+toHex(key),
+		'params: ' + params,
 		'ciphertext: '+toHex(ciphertext),
 		'plaintext: '+toHex(plaintext)
 	].join('<br>') +
