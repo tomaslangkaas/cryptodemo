@@ -49,7 +49,7 @@ function encrypt(){
 	var params = [].concat((128 ^ (rand[0]>>>26)) << 24 ^ (protocol << 16) ^ strength,
 	rand);
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
-	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
+	var plaintext = sjcl.codec.utf8String.toBits(msg.value);
 	var prf = new sjcl.cipher.aes(key);
 	var ciphertext = sjcl.mode.gcm.encrypt(prf, plaintext, nonce, params);
 	var toHex = sjcl.codec.hex.fromBits;
