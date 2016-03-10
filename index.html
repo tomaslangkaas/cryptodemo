@@ -93,7 +93,7 @@ params = ciphertext.slice(0,9);
 		'salt: '+toHex(salt),
 		'nonce: '+toHex(nonce),
 		'key: '+toHex(key),
-		'params: ' + params,
+		'params: ' + toHex(params),
 		'ciphertext: '+toHex(ciphertext),
 		'plaintext: '+toHex(plaintext)
 	].join('<br>') +
