@@ -35,7 +35,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sjcl/1.0.0/sjcl.min.js"></script>
 <script>
 /*
-	encrypt tag (128) + random first 2 bits + version (4 bits) (1 byte)
+	encrypt tag (128) + random first 6 bits (1 byte)
 	protocol (1 byte)
 	key strength factor (2 bytes)
 */
@@ -46,7 +46,7 @@ function encrypt(){
 	var strength = 1;
 	var iter = 1024 * strength;
 	var protocol = 1;
-	var params = [].concat((128 ^ ((rand[0]>>>30)<<4)) << 24 ^ (protocol << 16) ^ strength,
+	var params = [].concat((128 ^ (rand[0]>>>26)) << 24 ^ (protocol << 16) ^ strength,
 	rand);
 	var key = sjcl.misc.pbkdf2(pwd.value, salt, iter);
 	var plaintext = sjcl.codec.utf8String.toBits(msg.innerHTML);
@@ -66,7 +66,7 @@ function encrypt(){
 function decrypt(){
 	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
 	var params = ciphertext[0];
-	var familiar = (params >>> 30) == 2 && ((params >>> 28) & 3) == ciphertext[1] >>>30;
+	var familiar = (params >>> 30) == 2 && ((params >>> 24) & 63) == ciphertext[1] >>> 26;
 	var protocol, strength, salt, nonce, iter, key, plaintext, prf;
 	if(familiar){
 		protocol = (params >>> 16) & 0xff;
