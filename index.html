@@ -84,7 +84,7 @@ function decrypt(){
 			plaintext = [];
 		}
 	}else{
-		alert('unknown cryptography');
+		alert('unknown ciphertext format');
 	}
 	var toHex = sjcl.codec.hex.fromBits;
 	disp2.innerHTML = '<pre>' +
