@@ -67,13 +67,13 @@ function decrypt(){
 	var ciphertext =  sjcl.codec.hex.toBits(ciph.value);
 	var params = ciphertext[0];
 	var familiar = (params >>> 30) == 2 && ((params >>> 24) & 63) == ciphertext[1] >>> 26;
-	var protocol, strength, salt, nonce, iter, key, plaintext, prf;
-	if(familiar){
-		protocol = (params >>> 16) & 0xff;
+	var protocol protocol = (params >>> 16) & 0xff; 
+	var strength, salt, nonce, iter, key, plaintext, prf;
+	if(familiar && protocol == 1){
 		strength = params & 0xffff;
 		salt = ciphertext.slice(1,5);
 		nonce = ciphertext.slice(5,9);
-params = ciphertext.slice(0,9);
+		params = ciphertext.slice(0,9);
 		ciphertext = ciphertext.slice(9);
 		key = sjcl.misc.pbkdf2(pwd2.value, salt, strength * 1024);
 		try{
@@ -83,6 +83,8 @@ params = ciphertext.slice(0,9);
 			alert('decryption failed');
 			plaintext = [];
 		}
+	}else{
+		alert('unknown cryptography');
 	}
 	var toHex = sjcl.codec.hex.fromBits;
 	disp2.innerHTML = '<pre>' +
